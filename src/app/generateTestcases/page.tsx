@@ -15,99 +15,70 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Textarea } from "@/components/ui/textarea"
-import { Variable } from "lucide-react";
+import { VariableData, LineData, IntegerData, FloatData, StringData, BooleanData, ArrayData } from "./datatypes";
+import String from "./String";
+import Integer from "./Integer";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-interface VariableData {
-    datatype?: string;
-    intRange?: Array<number>;
-    intSpecificValues?: Array<number>;
-    floatRange?: Array<number>;
-    floatSpecificValues?: Array<number>;
-    stringLength?: Array<number>;
-    lowerCaseLettersRange?: Array<string>;
-    lowerCaseLetters?: Array<string>;
-    upperCaseLettersRange?: Array<string>;
-    upperCaseLetters?: Array<string>;
-    stringNumbersRange?: Array<string>;
-    stringNumbers?: Array<string>;
-    specialCharacters?: Array<string>;
-}
+function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
-interface LineData {
-    [varName: string]: VariableData | null;
-}
-
-
-function integer() {
-    return (
-        <div className="flex justify-between gap-4 items-center">
-            <Label htmlFor="integer" className="">Range</Label>
-            <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">
-                <Input type="integer" id="integer" placeholder="start" />
-                -
-                <Input type="integer" id="integer" placeholder="end" />
-            </div>
-            <p className="text-center font-bold"> OR </p>
-            <Label htmlFor="integer" className="w-2/5">Specific Value(s)</Label>
-            <Input className="w-full" type="integer" id="integer" placeholder="Integer" />
-        </div>
-    );
-}
-
-
-function TestCaseLine({ k, setEachLineData, eachLineData }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[]}): React.JSX.Element {
-
-    const [tempData, setTempData] = React.useState<string>("");
-    const [curr, setCurr] = React.useState<VariableData>(); 
+    const [varName, setVarName] = React.useState<string>("");
+    const [curr, setCurr] = React.useState<VariableData>();
+    const [arrowDown, setArrowDown] = React.useState<boolean>(true);
 
     function addVariable() {
         setEachLineData(prevData => {
-            const newData = [...prevData];
-            newData[k] = { ...newData[k], tempData: null };
-            return newData;
-        });
-        // console.log(eachLineData);
+            prevData[k] = { ...prevData[k], [varName]: curr };
+            return prevData;
+        })
+        console.log(eachLineData);
+        console.log(curr, "curr")
     }
 
+    function changeDirection() {
+        console.log("clicked");
+        setArrowDown(!arrowDown);
+    }
 
     return (
-        <div className="border-[#595959] rounded-md flex flex-col gap-1 ">
-            <div className="flex gap-5 items-end">
-                <h1 className="text-lg font-semibold">Line {k + 1}</h1>
-                <Button variant="outline" className="py-1 h-fit border-[#595959]" onClick={addVariable}>Add a Variable</Button>
-            </div>
-            <div className="flex justify-between [&>*]:w-full gap-5" key={k}>
-                <div id="linesOfTestcases" className="">
-                    <Label htmlFor="varName"> Variable Name </Label>
-                    <Input type="varName" id="varName" placeholder="Variable Name"
-                        onChange={(e) => {
-                            // setEachLineData(prevData => {
-                            //     const newData = [...prevData];
-                            //     newData[k] = { ...newData[k], [curr]: null };
-                            //     return newData;
-                            // });
-                            setTempData(e.target.value);
-                        }}
-                    />
-                </div>
-                <div>
-                    <Label className="opacity-95"> Datatype </Label> <br />
+        <div className="flex gap-1 border-[#595959]">
+            <div className="flex flex-col border-[#595959]">
+                <div className="flex flex-col gap-1" key={k}>
+
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full bg-transparent border-[#595959] dark:hover:bg-[#292929]">data</Button>
-                            {/* <Button variant="outline" className="w-full bg-transparent border-[#595959] dark:hover:bg-[#292929]">{eachLineData[k].datatype}</Button> */}
-                        </DropdownMenuTrigger>
+                        <div className="flex gap-2 items-center py-1">
+                            <Label>Datatype :</Label>
+
+                            <DropdownMenuTrigger asChild >
+                                <div className="flex items-center">
+                                    <Button variant="outline" onClick={changeDirection} className="w-min bg-transparent border-none rounded-none p-0 h-fit dark:hover:bg-[#292929]">{curr?.datatype || "datatype"}</Button>
+                                    <IoIosArrowDown />
+                                </div>
+                            </DropdownMenuTrigger>
+                        </div>
                         <DropdownMenuContent className="">
-                            {/* <DropdownMenuLabel className=""> {eachLineData[k].datatype} </DropdownMenuLabel> */}
+                            <DropdownMenuLabel className=""> {curr?.datatype} </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuRadioGroup value={"popo"} onValueChange={
-                            // <DropdownMenuRadioGroup value={eachLineData.varData.datatype} onValueChange={
+                            <DropdownMenuRadioGroup value={curr?.datatype} onValueChange={
+                                // <DropdownMenuRadioGroup value={eachLineData.varData.datatype} onValueChange={
                                 (e) => {
-                                    setEachLineData(prevData => {
-                                        const newData = [...prevData];
-                                        // newData[k] = { ...newData[k], . };
-                                        return newData;
-                                    });
+                                    if (e === "integer") {
+                                        setCurr({ datatype: e, varData: { range: [0, 0] } as IntegerData });
+                                    }
+                                    else if (e === "float") {
+                                        setCurr({ datatype: e, varData: {} as FloatData });
+                                    }
+                                    else if (e === "string") {
+                                        setCurr({ datatype: e, varData: {} as StringData });
+                                    }
+                                    else if (e === "boolean") {
+                                        setCurr({ datatype: e, varData: {} as BooleanData });
+                                    }
+                                    else if (e === "array") {
+                                        setCurr({ datatype: e, varData: {} as ArrayData });
+                                    }
+
+                                    console.log(curr);
                                 }
                             }>
                                 <DropdownMenuRadioItem value="integer" >Integer</DropdownMenuRadioItem>
@@ -118,31 +89,92 @@ function TestCaseLine({ k, setEachLineData, eachLineData }: { k: number, setEach
                             </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
+
+                    <div className="flex gap-2 items-center">
+                        <Label htmlFor="varName">Variable Name:</Label>
+                        <Input className="border-none border-t h-min w-min outline-1 outline-none py-1 px-1 underline underline-offset-2" type="varName" id="varName" placeholder="Variable Name"
+                            onChange={(e) => {
+                                setVarName(e.target.value);
+                            }}
+                        />
+                    </div>
+                <Button onClick={addVariable}>
+                    Add
+                </Button>
                 </div>
             </div>
-            <hr />
-            {/* {eachLineData[k].datatype === "integer" ? integer() : null} */}
+            <div className="flex flex-col gap-4 p-4">
+                {
+                    curr?.datatype === "integer" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null
+                }
+                {
+                    curr?.datatype === "string" ? <String k={k} setCurr={setCurr} curr={curr} /> : null
+                }
+            </div>
+        </div>
+    );
+}
+
+function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
+
+    const [varName, setVarName] = React.useState<string>("");
+    const [curr, setCurr] = React.useState<VariableData>();
+
+    const [res, setRes] = React.useState<number>(0);
+
+    return (
+        <div className="border gap-1 border-[#595959]">
+            {/* <div className="flex flex-col gap-2  border-[#595959]"> */}
+
+            <div className="flex items-center border-b border-[#595959]">
+                <h1 className="text-center px-4 w-1/2 h-full font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
+                <Button variant="outline" className="px-4 py-0 h-    w-full border-none border-[#595959] rounded-none" onClick={
+                    () => {
+                        setRes(res + 1);
+                    }
+                } >Add a Variable</Button>
+            </div>
+            {/* </div> */}
+
+            <div className="flex flex-col gap-4 p-4">
+                {
+                    Array.from({ length: res }).map((_, index) => {
+                        return (
+                            <EachVariableData key={index} k={k} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
+                        );
+                    })
+                }
+            </div>
+
         </div>
 
     );
 }
 
+
 export default function GenerateTestCase() {
+
+    const createTestcases = () => {
+        setShowResult(true);
+        console.log(eachLineData);
+        console.log(testCases);
+    }
+
+
     React.useEffect(() => {
         console.log("Run something")
     }, [])
     const [eachLineData, setEachLineData] = React.useState<Array<LineData>>([]);
     const [testCases, setTestCases] = React.useState<number>(0);
-    // const [lines, setLines] = React.useState<Array<number>>([]);
-
-
+    const [showResult, setShowResult] = React.useState<boolean>(false);
+    // const [resTestCases, setResTestCases] = React.useState<Array<LineData>>([]);
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-around">
             <Navbar></Navbar>
             <div className="h-[90%] w-full dark:bg-[#191919] dark:text-white p-5">
                 <div className="h-full w-full border-2 border-[#595959]  p-4 rounded flex gap-4">
-                    <div className="h-full w-full flex flex-col gap-2">
+                    <div className="h-full w-2/5 flex flex-col gap-2">
                         <div className="h-1/2 pb-7">
                             <Label htmlFor="Question" className="text-xl">Question</Label>
                             <Textarea className="h-full bg-transparent border-[#595959]" />
@@ -154,7 +186,7 @@ export default function GenerateTestCase() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col w-full gap-2">
+                    <div className="flex flex-col w-3/5  gap-2">
                         <div className="">
                             <Label htmlFor="totalCases" className="text-xl opacity-95">Configure Testcases</Label>
                             <div className="flex gap-2">
@@ -165,25 +197,24 @@ export default function GenerateTestCase() {
                                 } />
                                 <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]" onClick={
                                     () => {
-                                        // setLines([...lines, 1]);
                                         setEachLineData([...eachLineData, {}]);
-
                                         console.log(eachLineData);
                                     }
                                 }> Add a line </Button>
                                 <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]"> Add Dynamic Lines</Button>
-                                <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]"> Create Testcases</Button>
+                                <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]" onClick={createTestcases}> Create Testcases</Button>
                             </div>
                         </div>
-                        <div className="overflow-y-scroll">
+                        <h1 className="font-semibold">Lines of Testcases</h1>
 
-                            <h1 className="font-semibold">Lines of Testcases</h1>
-                            <div id="addLine" className="flex flex-col gap-8 p-2  border border-[#595959] border-opacity-30 rounded ">
+                        <div className="overflow-y-scroll border-[#595959] ">
+
+                            <div id="addLine" className="flex flex-col gap-2">
                                 {
                                     eachLineData.map((line, index) => {
                                         return (
                                             <>
-                                                <TestCaseLine k = {index} setEachLineData = {setEachLineData} eachLineData={eachLineData}/>
+                                                <TestCaseLine key={index} k={index} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
                                             </>
                                         );
                                     })

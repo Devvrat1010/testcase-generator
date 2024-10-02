@@ -1,4 +1,4 @@
-import { exampleAtom } from "../atoms/example";
+import { exampleAtom } from "../../app/atoms/example";
 import { useRecoilState } from "recoil";
 /*
  * Custom hook to use the exampleAtom.
