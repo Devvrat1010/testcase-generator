@@ -18,21 +18,36 @@ import { Textarea } from "@/components/ui/textarea"
 import { VariableData, LineData, IntegerData, FloatData, StringData, BooleanData, ArrayData } from "./datatypes";
 import String from "./String";
 import Integer from "./Integer";
+import Boolean from "./Boolean";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
     const [varName, setVarName] = React.useState<string>("");
-    const [curr, setCurr] = React.useState<VariableData>();
+    // const [varName, setVarName] = React.useState<Array<string>>(["", ""]);
+    // set default datatype of current as integer and range as [0,0] 
+    const [curr, setCurr] = React.useState<VariableData | undefined>({ datatype: "integer", isValidInput: true, varData: { range: [0, 0] } as IntegerData });
     const [arrowDown, setArrowDown] = React.useState<boolean>(true);
+    const [errorLine, setErrorLine] = React.useState<string>("");
 
     function addVariable() {
+        if(varName === ""){
+            setErrorLine("Variable name cannot be empty");
+            return;
+        }
+        if(!(curr?.isValidInput ?? false)){
+            setErrorLine("Invalid input");
+            return;
+        }
+        setErrorLine("");
+        
         setEachLineData(prevData => {
             prevData[k] = { ...prevData[k], [varName]: curr };
             return prevData;
         })
+        console.log(curr?.varData ?? {}, "varData");
+        console.log(curr?.isValidInput ?? false, "isValidInput");
         console.log(eachLineData);
-        console.log(curr, "curr")
     }
 
     function changeDirection() {
@@ -51,31 +66,31 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
 
                             <DropdownMenuTrigger asChild >
                                 <div className="flex items-center">
-                                    <Button variant="outline" onClick={changeDirection} className="w-min bg-transparent border-none rounded-none p-0 h-fit dark:hover:bg-[#292929]">{curr?.datatype || "datatype"}</Button>
+                                    <Button variant="outline" onClick={changeDirection} className="w-min bg-transparent border-none rounded-none p-0 h-fit dark:hover:bg-[#292929]">{curr?.datatype || "integer"}</Button>
                                     <IoIosArrowDown />
                                 </div>
                             </DropdownMenuTrigger>
                         </div>
                         <DropdownMenuContent className="">
-                            <DropdownMenuLabel className=""> {curr?.datatype} </DropdownMenuLabel>
+                            <DropdownMenuLabel className=""> {curr?.datatype || "integer"} </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuRadioGroup value={curr?.datatype} onValueChange={
                                 // <DropdownMenuRadioGroup value={eachLineData.varData.datatype} onValueChange={
                                 (e) => {
                                     if (e === "integer") {
-                                        setCurr({ datatype: e, varData: { range: [0, 0] } as IntegerData });
+                                        setCurr({ datatype: e, isValidInput:true, varData: { range: [0, 0] } as IntegerData });
                                     }
                                     else if (e === "float") {
-                                        setCurr({ datatype: e, varData: {} as FloatData });
+                                        setCurr({ datatype: e, isValidInput:true, varData: {} as FloatData });
                                     }
                                     else if (e === "string") {
-                                        setCurr({ datatype: e, varData: {} as StringData });
+                                        setCurr({ datatype: e, isValidInput:true, varData: {} as StringData });
                                     }
                                     else if (e === "boolean") {
-                                        setCurr({ datatype: e, varData: {} as BooleanData });
+                                        setCurr({ datatype: e, isValidInput:true, varData: {} as BooleanData });
                                     }
                                     else if (e === "array") {
-                                        setCurr({ datatype: e, varData: {} as ArrayData });
+                                        setCurr({ datatype: e, isValidInput:true, varData: {} as ArrayData });
                                     }
 
                                     console.log(curr);
@@ -94,22 +109,32 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                         <Label htmlFor="varName">Variable Name:</Label>
                         <Input className="border-none border-t h-min w-min outline-1 outline-none py-1 px-1 underline underline-offset-2" type="varName" id="varName" placeholder="Variable Name"
                             onChange={(e) => {
-                                setVarName(e.target.value);
+                                if(e.target.value === ""){
+                                    setCurr({...curr, isValidInput: curr?.isValidInput || false, datatype: curr?.datatype || "integer", varData: curr?.varData ?? { range: [0, 0] } as IntegerData});
+                                }
+                                else if(e.target.value !== ""){
+                                    setEachLineData(prevData => {
+                                        delete prevData[k][varName];
+                                        return prevData;
+                                    })
+                                    setVarName(e.target.value);                                    
+                                }
                             }}
                         />
                     </div>
                 <Button onClick={addVariable}>
                     Add
                 </Button>
+                <p className="text-red-500">{errorLine}</p>
                 </div>
             </div>
             <div className="flex flex-col gap-4 p-4">
-                {
-                    curr?.datatype === "integer" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null
-                }
-                {
-                    curr?.datatype === "string" ? <String k={k} setCurr={setCurr} curr={curr} /> : null
-                }
+                { curr?.datatype === "integer" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null }
+                { curr?.datatype === "float" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null }
+                { curr?.datatype === "string" ? <String k={k} setCurr={setCurr} curr={curr} /> : null }
+                { curr?.datatype === "boolean" ? <Boolean k={k} setCurr={setCurr} curr={curr} /> : null }
+                {/* { curr?.datatype === "array" ? <String k={k} setCurr={setCurr} curr={curr} /> : null } */}
+
             </div>
         </div>
     );
@@ -117,9 +142,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
 
 function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
-    const [varName, setVarName] = React.useState<string>("");
-    const [curr, setCurr] = React.useState<VariableData>();
-
+    // const [varName, setVarName] = React.useState<string>("");
     const [res, setRes] = React.useState<number>(0);
 
     return (
@@ -127,8 +150,8 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
             {/* <div className="flex flex-col gap-2  border-[#595959]"> */}
 
             <div className="flex items-center border-b border-[#595959]">
-                <h1 className="text-center px-4 w-1/2 h-full font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
-                <Button variant="outline" className="px-4 py-0 h-    w-full border-none border-[#595959] rounded-none" onClick={
+                <h1 className="text-center px-4 w-1/2 bg-blue-400 py-2 font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
+                <Button variant="outline" className="px-4 py-2 h-full w-full border-none border-[#595959] rounded-none" onClick={
                     () => {
                         setRes(res + 1);
                     }
@@ -174,7 +197,7 @@ export default function GenerateTestCase() {
             <Navbar></Navbar>
             <div className="h-[90%] w-full dark:bg-[#191919] dark:text-white p-5">
                 <div className="h-full w-full border-2 border-[#595959]  p-4 rounded flex gap-4">
-                    <div className="h-full w-2/5 flex flex-col gap-2">
+                    {/* <div className="h-full w-2/5 flex flex-col gap-2">
                         <div className="h-1/2 pb-7">
                             <Label htmlFor="Question" className="text-xl">Question</Label>
                             <Textarea className="h-full bg-transparent border-[#595959]" />
@@ -185,8 +208,8 @@ export default function GenerateTestCase() {
 
                             </div>
                         </div>
-                    </div>
-                    <div className="flex flex-col w-3/5  gap-2">
+                    </div> */}
+                    <div className="flex flex-col   gap-2">
                         <div className="">
                             <Label htmlFor="totalCases" className="text-xl opacity-95">Configure Testcases</Label>
                             <div className="flex gap-2">

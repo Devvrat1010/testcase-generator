@@ -34,6 +34,7 @@ export interface ArrayData {
 
 export interface VariableData {
     datatype: string;
+    isValidInput: boolean;
     varData: IntegerData | FloatData | StringData | BooleanData | ArrayData;
 }
 
