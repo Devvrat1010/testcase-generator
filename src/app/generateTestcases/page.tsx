@@ -24,14 +24,14 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
     const [varName, setVarName] = React.useState<string>("");
-    // const [varName, setVarName] = React.useState<Array<string>>(["", ""]);
-    // set default datatype of current as integer and range as [0,0] 
     const [integerDatatypeData, setIntegerDatatypeData] = React.useState<IntegerData | undefined>({ });
     const [floatDatatypeData, setFloatDatatypeData] = React.useState<FloatData | undefined>({ });
     const [stringDatatypeData, setStringDatatypeData] = React.useState<StringData | undefined>({ });
     const [arrayDatatypeData, setArrayDatatypeData] = React.useState<ArrayData | undefined>({ });
     const [booleanDatatypeData, setBooleanDatatypeData] = React.useState<BooleanData | undefined>({ });
+
     const [curr, setCurr] = React.useState<VariableData | undefined>({ datatype: "integer", isValidInput: true, varData: { range: [0, 0] } as IntegerData });
+
     const [arrowDown, setArrowDown] = React.useState<boolean>(true);
     const [errorLine, setErrorLine] = React.useState<string>("");
 
@@ -46,25 +46,28 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
         }
         setErrorLine("");
 
-        setEachLineData(prevData => {
-            // create switch case for each datatype
-            if(curr?.datatype === "integer"){
-                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: integerDatatypeData}}};
-            }
-            if(curr?.datatype === "float"){
-                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: integerDatatypeData}}};
-            }
-            if(curr?.datatype === "string"){
-                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: stringDatatypeData}}};
-            }
-            if(curr?.datatype === "boolean"){
-                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: booleanDatatypeData}}};
-            }
-            return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: arrayDatatypeData}}};
+        if (curr?.datatype === "integer") setEachLineData(prevData => {
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: integerDatatypeData}};
+            return prevData;
         });
-
+        else if (curr?.datatype === "float") setEachLineData(prevData => {
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: floatDatatypeData}};
+            return prevData;
+        });
+        else if (curr?.datatype === "string") setEachLineData(prevData => {
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: stringDatatypeData}};
+            return prevData;
+        });
+        else if (curr?.datatype === "boolean") setEachLineData(prevData => {
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: booleanDatatypeData}};
+            return prevData;
+        });
+        else if (curr?.datatype === "array") setEachLineData(prevData => {
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: arrayDatatypeData}};
+            return prevData;
+        });
         console.log(eachLineData, "eachLineData");
-        console.log(eachLineData[k].varName, "eachLineData[k]");
+        // console.log(eachLineData[k].varName, "eachLineData[k]");
     }
 
     function changeDirection() {
@@ -133,13 +136,11 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                 </div>
             </div>
             <div className="flex flex-col gap-4 p-4">
-
-                {/* { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null } */}
-                { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} /> : null }
-                { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} /> : null }
-                { curr?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} /> : null }
-                { curr?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} /> : null }
-                { curr?.datatype === "array" ? <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} /> : null }
+                { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} setErrorLine={setErrorLine}/> : null }
+                { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} setErrorLine={setErrorLine} /> : null }
+                { curr?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} setErrorLine={setErrorLine} /> : null }
+                { curr?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} setErrorLine={setErrorLine} /> : null }
+                { curr?.datatype === "array" ? <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} setErrorLine={setErrorLine} /> : null }
             </div>
         </div>
     );
@@ -150,7 +151,7 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
     const [res, setRes] = React.useState<number>(0);
 
     return (
-        <div className="border gap-1 border-[#595959]">
+        <div className="border gap-1 border-[#595959] rounded">
             <div className="flex items-center border-b border-[#595959]">
                 <h1 className="text-center px-4 w-1/2 bg-blue-400 py-2 font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
                 <Button variant="outline" className="px-4 py-2 h-full w-full border-none border-[#595959] rounded-none" onClick={
@@ -194,7 +195,7 @@ export default function GenerateTestCase() {
             <Navbar></Navbar>
             <div className="h-[90%] w-full dark:bg-[#191919] dark:text-white p-5">
                 <div className="h-full w-full border-2 border-[#595959]  p-4 rounded flex gap-4">
-                    {/* <div className="h-full w-2/5 flex flex-col gap-2">
+                    <div className="h-full w-2/5 flex flex-col gap-2">
                         <div className="h-1/2 pb-7">
                             <Label htmlFor="Question" className="text-xl">Question</Label>
                             <Textarea className="h-full bg-transparent border-[#595959]" />
@@ -205,8 +206,8 @@ export default function GenerateTestCase() {
 
                             </div>
                         </div>
-                    </div> */}
-                    <div className="flex flex-col   gap-2">
+                    </div>
+                    <div className="flex flex-col w-3/5 gap-2">
                         <div className="">
                             <Label htmlFor="totalCases" className="text-xl opacity-95">Configure Testcases</Label>
                             <div className="flex gap-2">
@@ -227,7 +228,7 @@ export default function GenerateTestCase() {
                         </div>
                         <h1 className="font-semibold">Lines of Testcases</h1>
 
-                        <div className="overflow-y-scroll border-[#595959] ">
+                        <div className="overflow-y-scroll border-[#595959] rounded">
 
                             <div id="addLine" className="flex flex-col gap-2">
                                 {

@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label"
 
 
 
-export default function Integer({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<IntegerData | undefined>>, datatypeData:  IntegerData | undefined }): React.JSX.Element {
+export default function Integer({ k, setDatatypeData, datatypeData, setErrorLine }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<IntegerData | undefined>>, datatypeData:  IntegerData | undefined, setErrorLine: React.Dispatch<React.SetStateAction<string>> }): React.JSX.Element {
 
     return (
-        <div className="flex flex-col justify-between gap-4 items-center">
+        <div className="flex flex-col justify-between gap-2 items-">
             <div>
 
                 <Label>Range</Label>
@@ -36,7 +36,7 @@ export default function Integer({ k, setDatatypeData, datatypeData }: { k: numbe
             <div>
 
                 <Label htmlFor="intValues" className="w-2/5">Specific Value(s)</Label>
-                <Input className="w-full" type="string" id="intValues" placeholder="Integer" onChange={
+                <Input className="w-full h-fit p-1" type="string" id="intValues" placeholder="Integer" onChange={
                     (e) => {
                         // create a function to split the string and convert it to array of integers
                         const values = e.target.value.split(",").map(Number);

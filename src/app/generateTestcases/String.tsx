@@ -2,9 +2,46 @@ import { StringData, IntegerData, FloatData, BooleanData, ArrayData, VariableDat
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export default function String({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<StringData | undefined>>, datatypeData:  StringData | undefined }): React.JSX.Element {
+// export default function String({ k, setDatatypeData, datatypeData, setErrorLine }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<StringData | undefined>>, datatypeData:  StringData | undefined, setErrorLine: React.Dispatch<React.SetStateAction<string>> }): React.JSX.Element {
+interface StringProps {
+    k: number;
+    setDatatypeData: React.Dispatch<React.SetStateAction<StringData | undefined>>;
+    datatypeData: StringData | undefined;
+    setErrorLine: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function String(props: StringProps): React.JSX.Element {
+    const { k, setDatatypeData, datatypeData, setErrorLine} = props;
     return (
-        <div>
+        <div className="flex flex-col gap-1">
+            <div className="flex gap-4 items-center">
+                <Label>Length: </Label>
+                <Input type="text" id="stringLength" placeholder="Variable name" onChange={
+                    (e) => {
+                        // create a function to check if the input is only single word
+                        if(e.target.value.split(" ").length > 1){
+                            // setErrorLine("Please enter a single word");
+                            alert("Please enter a single word");
+                            return;
+                        }
+                        if(e.target.value === ""){
+                            alert("Please enter a valid variable name");
+                            return;
+                        }
+                        if(e.target.value.split(",").length > 1){
+                            alert("Please enter a single word");
+                            return;
+                        }
+                        setDatatypeData({ ...datatypeData, length: e.target.value });
+                    }
+                } />
+                <p> OR </p>
+                <Input type="number" id="stringLength" placeholder="Static value" onChange={
+                    (e) => {
+                        setDatatypeData({ ...datatypeData, length: Number(e.target.value) });
+                    }
+                } />
+            </div>
 
             <div className="flex justify-between gap-4 items-center">
                 <Label> Lowercase letters </Label>

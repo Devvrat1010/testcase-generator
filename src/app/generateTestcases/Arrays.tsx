@@ -20,30 +20,73 @@ import Integer from './Integer';
 import String from './String';
 import Boolean from './Boolean';
 
-export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<ArrayData | undefined>>, datatypeData: ArrayData | undefined }): React.JSX.Element {
+interface ArrayProps {
+    k: number;
+    setDatatypeData: React.Dispatch<React.SetStateAction<ArrayData | undefined>>;
+    datatypeData: ArrayData | undefined;
+    setErrorLine: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function Arrays(props: ArrayProps): React.JSX.Element {
+    const { k, setDatatypeData, datatypeData, setErrorLine } = props;
 
     const [arrowDown, setArrowDown] = React.useState(false);
     // const [currArray, setCurrArray] = React.useState<IntegerData | FloatData | StringData | BooleanData | ArrayData | undefined>(undefined);
-    const [integerDatatypeData, setIntegerDatatypeData] = React.useState<IntegerData | undefined>({ });
-    const [floatDatatypeData, setFloatDatatypeData] = React.useState<FloatData | undefined>({ });
-    const [stringDatatypeData, setStringDatatypeData] = React.useState<StringData | undefined>({ });
-    const [arrayDatatypeData, setArrayDatatypeData] = React.useState<ArrayData | undefined>({ });
-    const [booleanDatatypeData, setBooleanDatatypeData] = React.useState<BooleanData | undefined>({ });
+    const [integerDatatypeData, setIntegerDatatypeData] = React.useState<IntegerData | undefined>({});
+    const [floatDatatypeData, setFloatDatatypeData] = React.useState<FloatData | undefined>({});
+    const [stringDatatypeData, setStringDatatypeData] = React.useState<StringData | undefined>({});
+    const [arrayDatatypeData, setArrayDatatypeData] = React.useState<ArrayData | undefined>({});
+    const [booleanDatatypeData, setBooleanDatatypeData] = React.useState<BooleanData | undefined>({});
     useEffect(() => {
-        setDatatypeData({ ...datatypeData, datatype: "integer"});
+        setDatatypeData({ ...datatypeData, datatype: "integer" });
     }, []);
-    
+
     function addArray() {
-        if(datatypeData?.datatype === "integer") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
-        else if(datatypeData?.datatype === "float") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
-        else if(datatypeData?.datatype === "string") setDatatypeData({ ...datatypeData, varData: stringDatatypeData });
-        else if(datatypeData?.datatype === "boolean") setDatatypeData({ ...datatypeData, varData: booleanDatatypeData });
+        if (datatypeData?.datatype === "integer") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
+        else if (datatypeData?.datatype === "float") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
+        else if (datatypeData?.datatype === "string") setDatatypeData({ ...datatypeData, varData: stringDatatypeData });
+        else if (datatypeData?.datatype === "boolean") setDatatypeData({ ...datatypeData, varData: booleanDatatypeData });
         else setDatatypeData({ ...datatypeData, varData: arrayDatatypeData });
     }
 
     return (
-        <div >
-            <div className='flex'>
+        <div className='flex flex-col gap-2'>
+            <div className='flex gap-2 items-center'>
+                <Label> Length: </Label>
+                <Input type="text" id="arrayLength" placeholder="Variable name" onChange={
+                    (e) => {
+                        // create a function to check if the input is only single word
+                        if (e.target.value.split(" ").length > 1) {
+                            // setErrorLine("Please enter a single word");
+                            alert("Please enter a single word");
+                            return;
+                        }
+                        if (e.target.value === "") {
+                            alert("Please enter a valid variable name");
+                            return;
+                        }
+                        if (e.target.value.split(",").length > 1) {
+                            alert("Please enter a single word");
+                            return;
+                        }
+                        let temp: string[] = [];
+                        temp = [...(datatypeData?.length as string[] || [])];
+                        temp.push(e.target.value);
+                        setDatatypeData({ ...datatypeData, length: temp });
+                        // setDatatypeData({ ...datatypeData, length: [...(datatypeData?.length || []), e.target.value] });
+                    }
+                } />
+                <p> OR </p>
+                <Input type="number" id="stringLength" placeholder="Static value" onChange={
+                    (e) => {
+                        let temp: string[] = [];
+                        temp = [...(datatypeData?.length as string[] || [])];
+                        temp.push(e.target.value);
+                        setDatatypeData({ ...datatypeData, length: temp });
+                    }
+                } />
+            </div>
+            <div className='flex gap-4'>
 
                 <DropdownMenu>
                     <div className="flex gap-2 items-center py-1">
@@ -75,14 +118,25 @@ export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button onClick={addArray}> Click me</Button>
+                <Button onClick={addArray} className='px-2 py-1.5 h-fit'> Save </Button>
             </div>
-            <div className="flex flex-col gap-4 p-4">
-                { datatypeData?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} /> : null }
-                { datatypeData?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} /> : null }
-                { datatypeData?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} /> : null }
-                { datatypeData?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} /> : null }
-                { datatypeData?.datatype === "array" ? <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} /> : null }
+
+            <div className="flex flex-col gap-4 ">
+
+                {datatypeData?.datatype === "integer" ?
+                    <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} setErrorLine={setErrorLine} /> : null}
+
+                {datatypeData?.datatype === "float" ?
+                    <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} setErrorLine={setErrorLine} /> : null}
+
+                {datatypeData?.datatype === "string" ?
+                    <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} setErrorLine={setErrorLine} /> : null}
+
+                {datatypeData?.datatype === "boolean" ?
+                    <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} setErrorLine={setErrorLine} /> : null}
+
+                {datatypeData?.datatype === "array" ?
+                    <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} setErrorLine={setErrorLine} /> : null}
             </div>
         </div>
     )

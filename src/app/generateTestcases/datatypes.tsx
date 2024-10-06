@@ -1,22 +1,22 @@
 export interface IntegerData {
-    range?: Array<number>;
-    specificValues?: Array<number>;
+    range?: number[];
+    specificValues?: number[];
 }
 
 export interface FloatData {
-    range?: Array<number>;
-    specificValues?: Array<number>;
+    range?: number[];
+    specificValues?: number[];
 }
 
 export interface StringData {
-    length?: number;
-    lowerCaseLettersRange?: Array<string>;
-    lowerCaseLetters?: Array<string>;
-    upperCaseLettersRange?: Array<string>;  
-    upperCaseLetters?: Array<string>;
-    stringNumbersRange?: Array<string>;
-    stringNumbers?: Array<string>;
-    specialCharacters?: Array<string>;
+    length?: number | string;
+    lowerCaseLettersRange?: string[];
+    lowerCaseLetters?: string[];
+    upperCaseLettersRange?: string[];  
+    upperCaseLetters?: string[];
+    stringNumbersRange?: string[];
+    stringNumbers?: string[];
+    specialCharacters?: string[];
 }
 
 export interface BooleanData {
@@ -24,7 +24,7 @@ export interface BooleanData {
 }
 
 export interface ArrayData {
-    length?: Array<number>;
+    length?: number[] | string[];
     datatype?: string;
     varData?: IntegerData | FloatData | StringData | BooleanData | ArrayData;
 }

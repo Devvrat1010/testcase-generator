@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { BooleanData } from './datatypes';
 
-export default function Boolean({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<BooleanData | undefined>>, datatypeData:  BooleanData | undefined }): React.JSX.Element {
+// export default function Boolean({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<BooleanData | undefined>>, datatypeData:  BooleanData | undefined }): React.JSX.Element {
+export default function Boolean({ k, setDatatypeData, datatypeData, setErrorLine }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<BooleanData | undefined>>, datatypeData:  BooleanData | undefined, setErrorLine: React.Dispatch<React.SetStateAction<string>> }): React.JSX.Element  {
     const [value, setValue] = useState<boolean>(false);
 
     return (
