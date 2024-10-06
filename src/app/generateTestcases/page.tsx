@@ -48,6 +48,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
         });
 
         console.log(eachLineData, "eachLineData");
+        console.log(eachLineData[k].varName, "eachLineData[k]");
     }
 
     function changeDirection() {

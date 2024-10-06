@@ -64,6 +64,7 @@ export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number
                             <DropdownMenuRadioItem value="float">Float</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="string">String</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="boolean">Boolean</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="array">Array</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>

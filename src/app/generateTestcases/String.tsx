@@ -19,8 +19,8 @@ export default function String({ k, setDatatypeData, datatypeData }: { k: number
                     -   
                     <Input maxLength={1} type="string" id="lowEnd" placeholder="z" onChange={
                         (e) => {
-                            let temp = datatypeData?.lowerCaseLettersRange ? datatypeData.lowerCaseLettersRange[1] : "a";
-                            setDatatypeData({ ...datatypeData,lowerCaseLettersRange: [temp, e.target.value], lowerCaseLetters:[] });
+                            let temp = datatypeData?.lowerCaseLettersRange ? datatypeData.lowerCaseLettersRange[0] : "z";
+                            setDatatypeData({ ...datatypeData, lowerCaseLettersRange: [temp, e.target.value], lowerCaseLetters:[] });
                         }
                     } />
                 </div>
