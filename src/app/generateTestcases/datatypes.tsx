@@ -12,7 +12,7 @@ export interface StringData {
     length?: number;
     lowerCaseLettersRange?: Array<string>;
     lowerCaseLetters?: Array<string>;
-    upperCaseLettersRange?: Array<string>;
+    upperCaseLettersRange?: Array<string>;  
     upperCaseLetters?: Array<string>;
     stringNumbersRange?: Array<string>;
     stringNumbers?: Array<string>;

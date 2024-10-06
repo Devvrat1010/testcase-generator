@@ -26,7 +26,11 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
     const [varName, setVarName] = React.useState<string>("");
     // const [varName, setVarName] = React.useState<Array<string>>(["", ""]);
     // set default datatype of current as integer and range as [0,0] 
-    const [datatypeData, setDatatypeData] = React.useState<IntegerData | FloatData | StringData | BooleanData | ArrayData>({ });
+    const [integerDatatypeData, setIntegerDatatypeData] = React.useState<IntegerData | undefined>({ });
+    const [floatDatatypeData, setFloatDatatypeData] = React.useState<FloatData | undefined>({ });
+    const [stringDatatypeData, setStringDatatypeData] = React.useState<StringData | undefined>({ });
+    const [arrayDatatypeData, setArrayDatatypeData] = React.useState<ArrayData | undefined>({ });
+    const [booleanDatatypeData, setBooleanDatatypeData] = React.useState<BooleanData | undefined>({ });
     const [curr, setCurr] = React.useState<VariableData | undefined>({ datatype: "integer", isValidInput: true, varData: { range: [0, 0] } as IntegerData });
     const [arrowDown, setArrowDown] = React.useState<boolean>(true);
     const [errorLine, setErrorLine] = React.useState<string>("");
@@ -43,8 +47,20 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
         setErrorLine("");
 
         setEachLineData(prevData => {
-            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: datatypeData}};
-            return prevData;
+            // create switch case for each datatype
+            if(curr?.datatype === "integer"){
+                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: integerDatatypeData}}};
+            }
+            if(curr?.datatype === "float"){
+                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: integerDatatypeData}}};
+            }
+            if(curr?.datatype === "string"){
+                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: stringDatatypeData}}};
+            }
+            if(curr?.datatype === "boolean"){
+                return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: booleanDatatypeData}}};
+            }
+            return {...prevData, [k]: { ...prevData[k], [varName]: {...curr, varData: arrayDatatypeData}}};
         });
 
         console.log(eachLineData, "eachLineData");
@@ -117,11 +133,13 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                 </div>
             </div>
             <div className="flex flex-col gap-4 p-4">
-                { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
-                { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
-                { curr?.datatype === "string" ? <String k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
-                { curr?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
-                { curr?.datatype === "array" ? <Arrays k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
+
+                {/* { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null } */}
+                { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} /> : null }
+                { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} /> : null }
+                { curr?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} /> : null }
+                { curr?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} /> : null }
+                { curr?.datatype === "array" ? <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} /> : null }
             </div>
         </div>
     );

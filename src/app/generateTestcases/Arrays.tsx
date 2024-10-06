@@ -23,14 +23,22 @@ import Boolean from './Boolean';
 export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<ArrayData | undefined>>, datatypeData: ArrayData | undefined }): React.JSX.Element {
 
     const [arrowDown, setArrowDown] = React.useState(false);
-    const [currArray, setCurrArray] = React.useState<IntegerData | FloatData | StringData | BooleanData | ArrayData | undefined>(undefined);
+    // const [currArray, setCurrArray] = React.useState<IntegerData | FloatData | StringData | BooleanData | ArrayData | undefined>(undefined);
+    const [integerDatatypeData, setIntegerDatatypeData] = React.useState<IntegerData | undefined>({ });
+    const [floatDatatypeData, setFloatDatatypeData] = React.useState<FloatData | undefined>({ });
+    const [stringDatatypeData, setStringDatatypeData] = React.useState<StringData | undefined>({ });
+    const [arrayDatatypeData, setArrayDatatypeData] = React.useState<ArrayData | undefined>({ });
+    const [booleanDatatypeData, setBooleanDatatypeData] = React.useState<BooleanData | undefined>({ });
     useEffect(() => {
         setDatatypeData({ ...datatypeData, datatype: "integer"});
     }, []);
     
     function addArray() {
-        setDatatypeData({ ...datatypeData, varData: currArray });
-        console.log(datatypeData, "datatypeData");
+        if(datatypeData?.datatype === "integer") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
+        else if(datatypeData?.datatype === "float") setDatatypeData({ ...datatypeData, varData: integerDatatypeData });
+        else if(datatypeData?.datatype === "string") setDatatypeData({ ...datatypeData, varData: stringDatatypeData });
+        else if(datatypeData?.datatype === "boolean") setDatatypeData({ ...datatypeData, varData: booleanDatatypeData });
+        else setDatatypeData({ ...datatypeData, varData: arrayDatatypeData });
     }
 
     return (
@@ -70,11 +78,11 @@ export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number
                 <Button onClick={addArray}> Click me</Button>
             </div>
             <div className="flex flex-col gap-4 p-4">
-                {datatypeData?.datatype === "integer" ? <Integer k={k} setDatatypeData={setCurrArray} datatypeData={currArray} /> : null}
-                {datatypeData?.datatype === "float" ? <Integer k={k} setDatatypeData={setCurrArray} datatypeData={currArray} /> : null}
-                {datatypeData?.datatype === "string" ? <String k={k} setDatatypeData={setCurrArray} datatypeData={currArray} /> : null}
-                {datatypeData?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setCurrArray} datatypeData={currArray} /> : null}
-                {datatypeData?.datatype === "array" ? <Arrays k={k} setDatatypeData={setCurrArray} datatypeData={currArray} /> : null}
+                { datatypeData?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} /> : null }
+                { datatypeData?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} /> : null }
+                { datatypeData?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} /> : null }
+                { datatypeData?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setBooleanDatatypeData} datatypeData={booleanDatatypeData} /> : null }
+                { datatypeData?.datatype === "array" ? <Arrays k={k} setDatatypeData={setArrayDatatypeData} datatypeData={arrayDatatypeData} /> : null }
             </div>
         </div>
     )
