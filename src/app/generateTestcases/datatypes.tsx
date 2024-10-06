@@ -20,22 +20,19 @@ export interface StringData {
 }
 
 export interface BooleanData {
-    value: boolean;
+    value?: boolean;
 }
 
 export interface ArrayData {
     length?: Array<number>;
     datatype?: string;
-    integer?: IntegerData;
-    float?: FloatData;
-    string?: StringData;
-    boolean?: BooleanData;
+    varData?: IntegerData | FloatData | StringData | BooleanData | ArrayData;
 }
 
 export interface VariableData {
-    datatype: string;
-    isValidInput: boolean;
-    varData: IntegerData | FloatData | StringData | BooleanData | ArrayData;
+    datatype?: string;
+    isValidInput?: boolean;
+    varData?: IntegerData | FloatData | StringData | BooleanData | ArrayData;
 }
 
 export interface LineData {

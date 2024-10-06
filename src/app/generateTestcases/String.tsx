@@ -1,8 +1,8 @@
-import { VariableData } from "./datatypes";
+import { StringData, IntegerData, FloatData, BooleanData, ArrayData, VariableData } from "./datatypes";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export default function String({ k, setCurr, curr }: { k: number, setCurr: React.Dispatch<React.SetStateAction<VariableData | undefined>>, curr: VariableData }): React.JSX.Element {
+export default function String({ k, setDatatypeData, datatypeData }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<StringData | undefined>>, datatypeData:  StringData | undefined }): React.JSX.Element {
     return (
         <div>
 
@@ -12,25 +12,15 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
 
                     <Input className="w-" maxLength={1} type="string" id="lowStart" placeholder="a" onChange={
                         (e) => {
-                            let temp = "z";
-                            try{
-                                temp = curr.varData.lowerCaseLettersRange[1];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, lowerCaseLettersRange: [e.target.value, temp], lowerCaseLetters:[]}});
+                            let temp = datatypeData?.lowerCaseLettersRange ? datatypeData.lowerCaseLettersRange[1] : "z";
+                            setDatatypeData({ ...datatypeData, lowerCaseLettersRange: [e.target.value, temp], lowerCaseLetters:[]});
                         }
                     } />
-                    -
+                    -   
                     <Input maxLength={1} type="string" id="lowEnd" placeholder="z" onChange={
                         (e) => {
-                            let temp = "a";
-                            try{
-                                temp = curr.varData.lowerCaseLettersRange[0];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, lowerCaseLettersRange: [temp, e.target.value], lowerCaseLetters:[] }});
+                            let temp = datatypeData?.lowerCaseLettersRange ? datatypeData.lowerCaseLettersRange[1] : "a";
+                            setDatatypeData({ ...datatypeData,lowerCaseLettersRange: [temp, e.target.value], lowerCaseLetters:[] });
                         }
                     } />
                 </div>
@@ -45,7 +35,7 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                             }
                             return self.indexOf(item) === index;
                         });
-                        setCurr({ ...curr, varData: { ...curr.varData, lowerCaseLettersRange: [], lowerCaseLetters: temp } });
+                        setDatatypeData({ ...datatypeData, lowerCaseLettersRange: [], lowerCaseLetters: temp });
                     }
                 } />
             </div>
@@ -56,25 +46,15 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                 <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">
                     <Input type="text" maxLength={1} className="uppercase" id="UpStart" placeholder="A"  onChange={
                         (e) => {
-                            let temp = "Z";
-                            try{
-                                temp = curr.varData.upperCaseLettersRange[1];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, upperCaseLettersRange: [e.target.value, temp], upperCaseLetters:[] }});
+                            let temp = datatypeData?.upperCaseLettersRange ? datatypeData.upperCaseLettersRange[1] : "Z";
+                            setDatatypeData({ ...datatypeData, upperCaseLettersRange: [e.target.value, temp], upperCaseLetters:[] });
                         }
                     } />
                     -
                     <Input type="string" maxLength={1} className="uppercase" id="UpEnd" placeholder="Z" onChange={
                         (e) => {
-                            let temp = "A";
-                            try{
-                                temp = curr.varData.upperCaseLettersRange[0];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, upperCaseLettersRange: [temp, e.target.value], upperCaseLetters:[] }});
+                            let temp = datatypeData?.upperCaseLettersRange ? datatypeData.upperCaseLettersRange[1] : "A";
+                            setDatatypeData({ ...datatypeData, upperCaseLettersRange: [temp, e.target.value], upperCaseLetters:[] });
                         }
                     } />
                 </div>
@@ -89,7 +69,7 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                             }
                             return self.indexOf(item) === index;
                         });
-                        setCurr({ ...curr, varData: { ...curr.varData, upperCaseLettersRange:[], upperCaseLetters: temp } });
+                        setDatatypeData({ ...datatypeData, upperCaseLettersRange:[], upperCaseLetters: temp });
                     }
                 } />
             </div>
@@ -98,25 +78,15 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                 <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">
                     <Input type="number" id="lowStart" placeholder="start" onChange={
                         (e) => {
-                            let temp = "9";
-                            try{
-                                temp = curr.varData.stringNumbersRange[1];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, stringNumbersRange: [e.target.value, temp], stringNumbers:[] } });
+                            let temp = datatypeData?.stringNumbersRange ? datatypeData.stringNumbersRange[1] : "9";
+                            setDatatypeData({ ...datatypeData, stringNumbersRange: [e.target.value, temp], stringNumbers:[] });
                         }
                     } />
                     -
                     <Input type="number" id="lowEnd" placeholder="end" onChange={
                         (e) => {
-                            let temp = "0";
-                            try{
-                                temp = curr.varData.stringNumbersRange[0];
-                            }catch(e){
-                                console.log(e);
-                            }
-                            setCurr({ ...curr, varData: { ...curr.varData, stringNumbersRange: [temp, e.target.value], stringNumbers:[] } });
+                            let temp = datatypeData?.stringNumbersRange ? datatypeData.stringNumbersRange[1] : "0";
+                            setDatatypeData({ ...datatypeData, stringNumbersRange: [temp, e.target.value], stringNumbers:[] });
                         }
                     } />
                 </div>
@@ -131,7 +101,7 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                             }
                             return self.indexOf(item) === index
                         });
-                        setCurr({ ...curr, varData: { ...curr.varData, stringNumbersRange: [], stringNumbers: temp } });
+                        setDatatypeData({ ...datatypeData, stringNumbersRange: [], stringNumbers: temp });
                     }
                 } />
             </div>
@@ -148,7 +118,7 @@ export default function String({ k, setCurr, curr }: { k: number, setCurr: React
                             return self.indexOf(item) === index
                         });
                         console.log(temp);
-                        setCurr({ ...curr, varData: { ...curr.varData, specialCharacters: temp } });
+                        setDatatypeData({ ...datatypeData, specialCharacters: temp });
                     }
                 } />
             </div>

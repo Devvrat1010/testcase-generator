@@ -1,4 +1,3 @@
-
 "use client"
 import React from "react";
 import { Input } from "@/components/ui/input"
@@ -19,6 +18,7 @@ import { VariableData, LineData, IntegerData, FloatData, StringData, BooleanData
 import String from "./String";
 import Integer from "./Integer";
 import Boolean from "./Boolean";
+import Arrays from "./Arrays";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
@@ -26,11 +26,12 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
     const [varName, setVarName] = React.useState<string>("");
     // const [varName, setVarName] = React.useState<Array<string>>(["", ""]);
     // set default datatype of current as integer and range as [0,0] 
+    const [datatypeData, setDatatypeData] = React.useState<IntegerData | FloatData | StringData | BooleanData | ArrayData>({ });
     const [curr, setCurr] = React.useState<VariableData | undefined>({ datatype: "integer", isValidInput: true, varData: { range: [0, 0] } as IntegerData });
     const [arrowDown, setArrowDown] = React.useState<boolean>(true);
     const [errorLine, setErrorLine] = React.useState<string>("");
 
-    function addVariable() {
+    async function addVariable() {
         if(varName === ""){
             setErrorLine("Variable name cannot be empty");
             return;
@@ -40,14 +41,13 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
             return;
         }
         setErrorLine("");
-        
+
         setEachLineData(prevData => {
-            prevData[k] = { ...prevData[k], [varName]: curr };
+            prevData[k] = { ...prevData[k], [varName]: {...curr, varData: datatypeData}};
             return prevData;
-        })
-        console.log(curr?.varData ?? {}, "varData");
-        console.log(curr?.isValidInput ?? false, "isValidInput");
-        console.log(eachLineData);
+        });
+
+        console.log(eachLineData, "eachLineData");
     }
 
     function changeDirection() {
@@ -77,22 +77,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                             <DropdownMenuRadioGroup value={curr?.datatype} onValueChange={
                                 // <DropdownMenuRadioGroup value={eachLineData.varData.datatype} onValueChange={
                                 (e) => {
-                                    if (e === "integer") {
-                                        setCurr({ datatype: e, isValidInput:true, varData: { range: [0, 0] } as IntegerData });
-                                    }
-                                    else if (e === "float") {
-                                        setCurr({ datatype: e, isValidInput:true, varData: {} as FloatData });
-                                    }
-                                    else if (e === "string") {
-                                        setCurr({ datatype: e, isValidInput:true, varData: {} as StringData });
-                                    }
-                                    else if (e === "boolean") {
-                                        setCurr({ datatype: e, isValidInput:true, varData: {} as BooleanData });
-                                    }
-                                    else if (e === "array") {
-                                        setCurr({ datatype: e, isValidInput:true, varData: {} as ArrayData });
-                                    }
-
+                                    setCurr({datatype:e, isValidInput: true});
                                     console.log(curr);
                                 }
                             }>
@@ -109,9 +94,11 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                         <Label htmlFor="varName">Variable Name:</Label>
                         <Input className="border-none border-t h-min w-min outline-1 outline-none py-1 px-1 underline underline-offset-2" type="varName" id="varName" placeholder="Variable Name"
                             onChange={(e) => {
+                                // setting variable name
                                 if(e.target.value === ""){
                                     setCurr({...curr, isValidInput: curr?.isValidInput || false, datatype: curr?.datatype || "integer", varData: curr?.varData ?? { range: [0, 0] } as IntegerData});
                                 }
+                                // deleting entry with duplicate variable name
                                 else if(e.target.value !== ""){
                                     setEachLineData(prevData => {
                                         delete prevData[k][varName];
@@ -129,12 +116,11 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                 </div>
             </div>
             <div className="flex flex-col gap-4 p-4">
-                { curr?.datatype === "integer" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null }
-                { curr?.datatype === "float" ? <Integer k={k} setCurr={setCurr} curr={curr} /> : null }
-                { curr?.datatype === "string" ? <String k={k} setCurr={setCurr} curr={curr} /> : null }
-                { curr?.datatype === "boolean" ? <Boolean k={k} setCurr={setCurr} curr={curr} /> : null }
-                {/* { curr?.datatype === "array" ? <String k={k} setCurr={setCurr} curr={curr} /> : null } */}
-
+                { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
+                { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
+                { curr?.datatype === "string" ? <String k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
+                { curr?.datatype === "boolean" ? <Boolean k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
+                { curr?.datatype === "array" ? <Arrays k={k} setDatatypeData={setDatatypeData} datatypeData={datatypeData} /> : null }
             </div>
         </div>
     );
@@ -142,13 +128,10 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
 
 function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
-    // const [varName, setVarName] = React.useState<string>("");
     const [res, setRes] = React.useState<number>(0);
 
     return (
         <div className="border gap-1 border-[#595959]">
-            {/* <div className="flex flex-col gap-2  border-[#595959]"> */}
-
             <div className="flex items-center border-b border-[#595959]">
                 <h1 className="text-center px-4 w-1/2 bg-blue-400 py-2 font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
                 <Button variant="outline" className="px-4 py-2 h-full w-full border-none border-[#595959] rounded-none" onClick={
@@ -163,7 +146,7 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
                 {
                     Array.from({ length: res }).map((_, index) => {
                         return (
-                            <EachVariableData key={index} k={k} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
+                            <EachVariableData key={"line " + k + ", variable " + index} k={k} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
                         );
                     })
                 }
@@ -183,14 +166,9 @@ export default function GenerateTestCase() {
         console.log(testCases);
     }
 
-
-    React.useEffect(() => {
-        console.log("Run something")
-    }, [])
     const [eachLineData, setEachLineData] = React.useState<Array<LineData>>([]);
     const [testCases, setTestCases] = React.useState<number>(0);
     const [showResult, setShowResult] = React.useState<boolean>(false);
-    // const [resTestCases, setResTestCases] = React.useState<Array<LineData>>([]);
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-around">
@@ -237,7 +215,7 @@ export default function GenerateTestCase() {
                                     eachLineData.map((line, index) => {
                                         return (
                                             <>
-                                                <TestCaseLine key={index} k={index} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
+                                                <TestCaseLine key={"line " + index} k={index} setEachLineData={setEachLineData} eachLineData={eachLineData} showResult={showResult} />
                                             </>
                                         );
                                     })
