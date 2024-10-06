@@ -27,9 +27,7 @@ export default function Arrays({ k, setDatatypeData, datatypeData }: { k: number
     useEffect(() => {
         setDatatypeData({ ...datatypeData, datatype: "integer"});
     }, []);
-    function changeDirection() {
-        console.log("clicked");
-    }
+    
     function addArray() {
         setDatatypeData({ ...datatypeData, varData: currArray });
         console.log(datatypeData, "datatypeData");
