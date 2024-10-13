@@ -47,6 +47,7 @@ export default function Arrays(props: ArrayProps): React.JSX.Element {
         else if (datatypeData?.datatype === "string") setDatatypeData({ ...datatypeData, varData: stringDatatypeData });
         else if (datatypeData?.datatype === "boolean") setDatatypeData({ ...datatypeData, varData: booleanDatatypeData });
         else setDatatypeData({ ...datatypeData, varData: arrayDatatypeData });
+        console.log(datatypeData, "datatypeData inside addArray");
     }
 
     return (
@@ -69,19 +70,18 @@ export default function Arrays(props: ArrayProps): React.JSX.Element {
                             alert("Please enter a single word");
                             return;
                         }
-                        let temp: string[] = [];
-                        temp = [...(datatypeData?.length as string[] || [])];
-                        temp.push(e.target.value);
-                        setDatatypeData({ ...datatypeData, length: temp });
+                        // let temp: string[] = [];
+                        // temp = [...(datatypeData?.length as string[] || [])];
+                        // temp.push(e.target.value);
+                        setDatatypeData({ ...datatypeData, length: e.target.value });
                         // setDatatypeData({ ...datatypeData, length: [...(datatypeData?.length || []), e.target.value] });
                     }
                 } />
                 <p> OR </p>
                 <Input type="number" id="stringLength" placeholder="Static value" onChange={
                     (e) => {
-                        let temp: string[] = [];
-                        temp = [...(datatypeData?.length as string[] || [])];
-                        temp.push(e.target.value);
+                        let temp = e.target.value + "";
+                        console.log(temp , "temp");
                         setDatatypeData({ ...datatypeData, length: temp });
                     }
                 } />

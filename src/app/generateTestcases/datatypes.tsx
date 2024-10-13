@@ -11,12 +11,12 @@ export interface FloatData {
 export interface StringData {
     length?: number | string;
     lowerCaseLettersRange?: string[];
-    lowerCaseLetters?: string[];
+    lowerCaseLetters?: string;
     upperCaseLettersRange?: string[];  
-    upperCaseLetters?: string[];
+    upperCaseLetters?: string;
     stringNumbersRange?: string[];
-    stringNumbers?: string[];
-    specialCharacters?: string[];
+    stringNumbers?: string;
+    specialCharacters?: string;
 }
 
 export interface BooleanData {
@@ -24,7 +24,7 @@ export interface BooleanData {
 }
 
 export interface ArrayData {
-    length?: number[] | string[];
+    length?: string;
     datatype?: string;
     varData?: IntegerData | FloatData | StringData | BooleanData | ArrayData;
 }

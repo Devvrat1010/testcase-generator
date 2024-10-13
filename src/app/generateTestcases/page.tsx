@@ -20,6 +20,8 @@ import Integer from "./Integer";
 import Boolean from "./Boolean";
 import Arrays from "./Arrays";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+// import createTestcase from "@/functions/createTestcase";
+import { create } from "domain";
 
 function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k: number, setEachLineData: React.Dispatch<React.SetStateAction<LineData[]>>, eachLineData: LineData[], showResult: boolean }): React.JSX.Element {
 
@@ -78,8 +80,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
     return (
         <div className="flex gap-1 border-[#595959]">
             <div className="flex flex-col border-[#595959]">
-                <div className="flex flex-col gap-1" key={k}>
-
+                <div className="flex flex-col gap-1 p-4" key={k}>
                     <DropdownMenu>
                         <div className="flex gap-2 items-center py-1">
                             <Label>Datatype :</Label>
@@ -135,7 +136,8 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                 <p className="text-red-500">{errorLine}</p>
                 </div>
             </div>
-            <div className="flex flex-col gap-4 p-4">
+            <div className="border-r border-[#595959] w-0 "></div>
+            <div className="flex flex-col gap-4 p-4 ">
                 { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} setErrorLine={setErrorLine}/> : null }
                 { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} setErrorLine={setErrorLine} /> : null }
                 { curr?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} setErrorLine={setErrorLine} /> : null }
@@ -160,9 +162,8 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
                     }
                 } >Add a Variable</Button>
             </div>
-            {/* </div> */}
 
-            <div className="flex flex-col gap-4 p-4">
+            <div className="flex flex-col gap-4">
                 {
                     Array.from({ length: res }).map((_, index) => {
                         return (
@@ -177,41 +178,82 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
     );
 }
 
-
 export default function GenerateTestCase() {
 
-    const createTestcases = () => {
-        setShowResult(true);
-        console.log(eachLineData);
-        console.log(testCases);
-    }
-
+    const [resultTestcases, setResultTestcases] = React.useState<Array<{ [key: string]: any }>>([]);
     const [eachLineData, setEachLineData] = React.useState<Array<LineData>>([]);
     const [testCases, setTestCases] = React.useState<number>(0);
     const [showResult, setShowResult] = React.useState<boolean>(false);
+
+    const createTestcases = async () => {
+        const temp = JSON.stringify({eachLineData, testCases});
+        const body = JSON.stringify({testcaseData: temp});
+        console.log(body, "bodyy")
+        const data = await fetch("http://localhost:8080/postTestcaseData", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: body
+        });
+        const result = await data.json();
+        console.log(result, "result");
+        setResultTestcases(result);
+    }
+
+    const copyToClipboard = () => {
+        const copyText = document.getElementById("Preview") as HTMLDivElement;
+        console.log(resultTestcases);
+        navigator.clipboard.writeText(copyText.innerText);
+    }
 
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-around">
             <Navbar></Navbar>
             <div className="h-[90%] w-full dark:bg-[#191919] dark:text-white p-5">
                 <div className="h-full w-full border-2 border-[#595959]  p-4 rounded flex gap-4">
-                    <div className="h-full w-2/5 flex flex-col gap-2">
-                        <div className="h-1/2 pb-7">
-                            <Label htmlFor="Question" className="text-xl">Question</Label>
-                            <Textarea className="h-full bg-transparent border-[#595959]" />
+                    <div className="h-full w-2/5 flex flex-col gap-4">
+                        <div className="h-1/2 border border-[#595959] flex flex-col">
+                            <Label htmlFor="Question" className="text-xl p-2">Question</Label>
+                            <textarea className="h-5/6 resize-none bg-transparent outline-none p-1 text-sm border-0 border-t border-[#595959] rounded-none" />
                         </div>
-                        <div className="h-full pb-7">
-                            <Label htmlFor="PreviewTestcases" className="text-xl h-1/6"> Preview </Label>
-                            <div className="h-full border border-[#595959] p-4 px-6 rounded" id="Question">
-
+                        <div className="h-fit">
+                            <div className="flex justify-between p-1 px-2 items-center border border-[#595959] border-b-0">
+                                <Label htmlFor="PreviewTestcases" className="text-xl h-1/6"> Preview </Label>
+                                <Button className="h-fit" onClick={copyToClipboard}>
+                                    Copy
+                                </Button>
+                            </div>
+                            <div className="h-full border border-[#595959] p-2 px-2 bg-gray-200" id="Preview">
+                                <div className="bg-gray-300 px-1">{testCases}</div>
+                                {
+                                    resultTestcases.map((l1, id1) => (
+                                        <div key={"result " + id1}>
+                                            {
+                                                eachLineData.map((line, index) => (
+                                                    <div key={"line " + index} className={`${id1 % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300'} hover:bg-yellow-200 px-1`} >
+                                                        {
+                                                            Object.keys(line).map((variable, index) => (
+                                                                <React.Fragment key={"variable " + index}  >
+                                                                    {Array.isArray(l1?.[variable]) ? l1?.[variable].join(" "): l1?.[variable] }
+                                                                    &nbsp;
+                                                                </React.Fragment>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col w-3/5 gap-2">
-                        <div className="">
+                    <div className="flex flex-col w-3/5 gap-2 border border-[#595959] [&>*]:px-2 py-2">
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="totalCases" className="text-xl opacity-95">Configure Testcases</Label>
                             <div className="flex gap-2">
-                                <Input className="w-1/3" type="totalCases" id="totalCases" placeholder="Number of Testcases" onChange={
+                                <Input className="w-1/3 h-10 px-3 py-2" type="totalCases" id="totalCases" placeholder="Number of Testcases" onChange={
                                     (e) => {
                                         setTestCases(Number(e.target.value));
                                     }
@@ -226,6 +268,7 @@ export default function GenerateTestCase() {
                                 <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]" onClick={createTestcases}> Create Testcases</Button>
                             </div>
                         </div>
+                        <hr className="border-0 border-t w-full border-[#595959]" />
                         <h1 className="font-semibold">Lines of Testcases</h1>
 
                         <div className="overflow-y-scroll border-[#595959] rounded">
