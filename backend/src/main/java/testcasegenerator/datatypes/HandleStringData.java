@@ -1,10 +1,12 @@
 package testcasegenerator.datatypes;
 
+import java.util.HashMap;
 import java.util.Random;
 import org.json.JSONObject;
 
 public class HandleStringData {
     private int length;
+    private String strLength;
     private String[] lowerCaseLettersRange;
     private String lowerCaseLetters;
     private String[] upperCaseLettersRange;
@@ -14,7 +16,7 @@ public class HandleStringData {
     private String specialCharacters;
 
     public HandleStringData(JSONObject jsonObject) {
-        this.length = jsonObject.getInt("length");
+        this.strLength = jsonObject.getString("length");
 
         // handling nullpointerexception and array out of bound exception
         this.lowerCaseLettersRange = jsonObject.has("lowerCaseLettersRange")
@@ -43,7 +45,15 @@ public class HandleStringData {
         this.specialCharacters = jsonObject.optString("specialCharacters", null);
     }
 
-    public String createTestcases() {
+    public String createTestcases(HashMap<String, Integer> map, String key) {
+        try{
+            this.length = Integer.parseInt(this.strLength);
+        }
+        catch(NumberFormatException e){
+            System.out.println("Invalid length value for key: " + key);
+            length = map.get(this.strLength);
+            // return null;
+        }
         StringBuilder testcase = new StringBuilder();
         Random random = new Random();
 

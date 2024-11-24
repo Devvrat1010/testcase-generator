@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 class TestcaseController {
 
     private final TestcaseRepository repository;
-    public final HashMap<String, String> map = new HashMap<String, String>();
 
     TestcaseController(TestcaseRepository repository) {
         this.repository = repository;
@@ -48,14 +47,14 @@ class TestcaseController {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/postTestcaseData")
     String newTestcase(@RequestBody String newTestcase) {
-        String jsonString = "{\"name\":\"Prem\", \"age\":22, \"city\":\"Ahmedabad\"}";
+        
+        HashMap<String, Integer> map = new HashMap<>();
 
-        // Convert String to JSONObject
         JSONObject jsonObject = new JSONObject(newTestcase);
-        JSONObject testcaseData = new JSONObject(jsonObject.getString("testcaseData"));
-        JSONArray eachLineData = new JSONArray(testcaseData.getJSONArray("eachLineData"));
-        int numberOfTestcases = testcaseData.getInt("testCases");
-        System.out.println(numberOfTestcases + "eachLineData");
+        System.out.println(jsonObject + "jsonObject");
+        JSONObject testcaseData = jsonObject.getJSONObject("testcaseData");
+        JSONArray eachLineData = testcaseData.getJSONArray("eachLineData");
+        int numberOfTestcases = testcaseData.getInt("testcases");
 
         // String[] res;
         JSONArray res = new JSONArray();
@@ -73,32 +72,39 @@ class TestcaseController {
                 System.out.println(eachLine + "eachLIne");
                 for (String key : eachLine.keySet()) {
                     JSONObject value = eachLine.getJSONObject(key);
-                    // String testcase;
-                    if (value.get("datatype").equals("string")) {
-                        HandleStringData handleStringData = new HandleStringData(value.getJSONObject("varData"));
-                        String testcase = handleStringData.createTestcases();
-                        currTestcase.put(key, testcase);
-                    } else if (value.get("datatype").equals("integer")) {
-                        HandleIntegerData handleIntegerData = new HandleIntegerData(value.getJSONObject("varData"));
-                        Integer testcase = handleIntegerData.createTestcases();
-                        currTestcase.put(key, testcase);
-                    } else if (value.get("datatype").equals("array")) {
-                        HandleArrayData handleArrayData = new HandleArrayData(value.getJSONObject("varData"));
-                        @SuppressWarnings("rawtypes")
-                        ArrayList testcase = handleArrayData.createTestcases();
-                        currTestcase.put(key, testcase);
-                    } else if (value.get("datatype").equals("boolean")) {
-                        HandleBooleanData handleBooleanData = new HandleBooleanData(value.getJSONObject("varData"));
-                        Boolean testcase = handleBooleanData.createTestcases();
-                        currTestcase.put(key, testcase);
-                    } else if (value.get("datatype").equals("float")) {
-                        HandleFloatData handleFloatData = new HandleFloatData(value.getJSONObject("varData"));
-                        Double testcase = handleFloatData.createTestcases();
-                        currTestcase.put(key, testcase);
 
-                    } else {
-                        String testcase = "Invalid datatype";
-                        currTestcase.put(key, testcase);
+                    // String testcase;
+                    switch (value.getString("datatype")) {
+                        case "string":
+                            HandleStringData handleStringData = new HandleStringData(value.getJSONObject("varData"));
+                            String stringTestcase = handleStringData.createTestcases(map, key);
+                            currTestcase.put(key, stringTestcase);
+                            break;
+                        case "integer":
+                            HandleIntegerData handleIntegerData = new HandleIntegerData(value.getJSONObject("varData"));
+                            Integer integerTestcase = handleIntegerData.createTestcases(map, key);
+                            currTestcase.put(key, integerTestcase);
+                            break;
+                        case "array":
+                            HandleArrayData handleArrayData = new HandleArrayData(value.getJSONObject("varData"));
+                            @SuppressWarnings("rawtypes")
+                            ArrayList arrayTestcase = handleArrayData.createTestcases(map, key);
+                            currTestcase.put(key, arrayTestcase);
+                            break;
+                        case "boolean":
+                            HandleBooleanData handleBooleanData = new HandleBooleanData(value.getJSONObject("varData"));
+                            Boolean booleanTestcase = handleBooleanData.createTestcases(map, key);
+                            currTestcase.put(key, booleanTestcase);
+                            break;
+                        case "float":
+                            HandleFloatData handleFloatData = new HandleFloatData(value.getJSONObject("varData"));
+                            Double floatTestcase = handleFloatData.createTestcases(map, key);
+                            currTestcase.put(key, floatTestcase);
+                            break;
+                        default:
+                            String invalidTestcase = "Invalid datatype";
+                            currTestcase.put(key, invalidTestcase);
+                            break;
                     }
                 }
             }

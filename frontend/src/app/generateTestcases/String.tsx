@@ -17,7 +17,7 @@ export default function String(props: StringProps): React.JSX.Element {
     };
 
     return (
-        <div className="flex flex-col gap-1 p:text-red-400">
+        <div className="flex flex-col gap-1 p:text-red-400 p-2">
             <div className="flex gap-4 items-center">
                 <Label>Length: </Label>
                 <Input type="text" id="stringLength" placeholder="Variable name" onChange={(e) => {
@@ -27,10 +27,10 @@ export default function String(props: StringProps): React.JSX.Element {
                     }
                     setDatatypeData({ ...datatypeData, length: e.target.value });
                 }} />
-                <p className="font-bold"> OR </p>
-                <Input type="number" id="stringLength" placeholder="Static value" onChange={(e) => {
+                {/* <p className="font-bold"> OR </p>
+                <Input type="number" id="stringLength" placeholder="Variable name or Static value" onChange={(e) => {
                     setDatatypeData({ ...datatypeData, length: Number(e.target.value) });
-                }} />
+                }} /> */}
             </div>
 
             <div className="flex justify-between gap-4 items-center">

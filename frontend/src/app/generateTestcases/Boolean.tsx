@@ -11,7 +11,7 @@ export default function Boolean({ k, setDatatypeData, datatypeData, setErrorLine
     const [value, setValue] = useState<boolean>(false);
 
     return (
-        <div className="flex flex-col justify-between gap-4 items-center">
+        <div className="flex flex-col justify-between gap-4 items-center p-2">
             <form>
                 <Label htmlFor="boolean">1 or 0 for fixed boolean <span className='text-red-600'>(optional)</span></Label>
                 <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">

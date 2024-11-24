@@ -69,7 +69,6 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
             return prevData;
         });
         console.log(eachLineData, "eachLineData");
-        // console.log(eachLineData[k].varName, "eachLineData[k]");
     }
 
     function changeDirection() {
@@ -78,7 +77,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
     }
 
     return (
-        <div className="flex gap-1 border-[#595959]">
+        <div className="flex border-[#595959] border-b">
             <div className="flex flex-col border-[#595959]">
                 <div className="flex flex-col gap-1 p-4" key={k}>
                     <DropdownMenu>
@@ -137,7 +136,7 @@ function EachVariableData({ k, setEachLineData, eachLineData, showResult }: { k:
                 </div>
             </div>
             <div className="border-r border-[#595959] w-0 "></div>
-            <div className="flex flex-col gap-4 p-4 ">
+            <div className="flex flex-col gap-4 w-full">
                 { curr?.datatype === "integer" ? <Integer k={k} setDatatypeData={setIntegerDatatypeData} datatypeData={integerDatatypeData} setErrorLine={setErrorLine}/> : null }
                 { curr?.datatype === "float" ? <Integer k={k} setDatatypeData={setFloatDatatypeData} datatypeData={floatDatatypeData} setErrorLine={setErrorLine} /> : null }
                 { curr?.datatype === "string" ? <String k={k} setDatatypeData={setStringDatatypeData} datatypeData={stringDatatypeData} setErrorLine={setErrorLine} /> : null }
@@ -153,9 +152,9 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
     const [res, setRes] = React.useState<number>(0);
 
     return (
-        <div className="border gap-1 border-[#595959] rounded">
+        <div className="border gap-1 border-[#595959] rounded w-full">
             <div className="flex items-center border-b border-[#595959]">
-                <h1 className="text-center px-4 w-1/2 bg-blue-400 py-2 font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
+                <h1 className="text-center px-4 w-2/5 bg-blue-400 py-2 font-semibold border-r border-r-[#595959] flex items-center">Line {k + 1}</h1>
                 <Button variant="outline" className="px-4 py-2 h-full w-full border-none border-[#595959] rounded-none" onClick={
                     () => {
                         setRes(res + 1);
@@ -163,7 +162,7 @@ function TestCaseLine({ k, setEachLineData, eachLineData, showResult }: { k: num
                 } >Add a Variable</Button>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
                 {
                     Array.from({ length: res }).map((_, index) => {
                         return (
@@ -182,19 +181,21 @@ export default function GenerateTestCase() {
 
     const [resultTestcases, setResultTestcases] = React.useState<Array<{ [key: string]: any }>>([]);
     const [eachLineData, setEachLineData] = React.useState<Array<LineData>>([]);
-    const [testCases, setTestCases] = React.useState<number>(0);
+    const [testcases, setTestcases] = React.useState<number>(0);
     const [showResult, setShowResult] = React.useState<boolean>(false);
 
     const createTestcases = async () => {
-        const temp = JSON.stringify({eachLineData, testCases});
-        const body = JSON.stringify({testcaseData: temp});
-        console.log(body, "bodyy")
+        const temp1 = {testcaseData: {eachLineData, testcases}};
+        // const temp = JSON.stringify({eachLineData, testcases});
+        // const body = JSON.stringify({testcaseData: temp});
+        // console.log(body, "bodyy")
+        console.log(temp1, "temp1")
         const data = await fetch("http://localhost:8080/postTestcaseData", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: body
+            body: JSON.stringify(temp1),
         });
         const result = await data.json();
         console.log(result, "result");
@@ -217,21 +218,21 @@ export default function GenerateTestCase() {
                             <Label htmlFor="Question" className="text-xl p-2">Question</Label>
                             <textarea className="h-5/6 resize-none bg-transparent outline-none p-1 text-sm border-0 border-t border-[#595959] rounded-none" />
                         </div>
-                        <div className="h-fit">
+                        <div className="h-1/2">
                             <div className="flex justify-between p-1 px-2 items-center border border-[#595959] border-b-0">
                                 <Label htmlFor="PreviewTestcases" className="text-xl h-1/6"> Preview </Label>
                                 <Button className="h-fit" onClick={copyToClipboard}>
                                     Copy
                                 </Button>
                             </div>
-                            <div className="h-full border border-[#595959] p-2 px-2 bg-gray-200" id="Preview">
-                                <div className="bg-gray-300 px-1">{testCases}</div>
+                            <div className="h-[88.8%] border border-[#595959] p-2 px-2 bg-gray-200 overflow-y-scroll" id="Preview">
+                                <div className="bg-gray-300 px-1 ">{testcases}</div>
                                 {
                                     resultTestcases.map((l1, id1) => (
-                                        <div key={"result " + id1}>
+                                        <div key={"result " + id1} className="">
                                             {
                                                 eachLineData.map((line, index) => (
-                                                    <div key={"line " + index} className={`${id1 % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300'} hover:bg-yellow-200 px-1`} >
+                                                    <div key={"line " + index} className={`${id1 % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300'} hover:bg-yellow-50 px-1`} >
                                                         {
                                                             Object.keys(line).map((variable, index) => (
                                                                 <React.Fragment key={"variable " + index}  >
@@ -255,7 +256,7 @@ export default function GenerateTestCase() {
                             <div className="flex gap-2">
                                 <Input className="w-1/3 h-10 px-3 py-2" type="totalCases" id="totalCases" placeholder="Number of Testcases" onChange={
                                     (e) => {
-                                        setTestCases(Number(e.target.value));
+                                        setTestcases(Number(e.target.value));
                                     }
                                 } />
                                 <Button variant="outline" className="w-1/3 bg-transparent border-[#595959]" onClick={

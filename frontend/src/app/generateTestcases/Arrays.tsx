@@ -51,7 +51,7 @@ export default function Arrays(props: ArrayProps): React.JSX.Element {
     }
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-2 p-2'>
             <div className='flex gap-2 items-center'>
                 <Label> Length: </Label>
                 <Input type="text" id="arrayLength" placeholder="Variable name" onChange={
@@ -70,21 +70,17 @@ export default function Arrays(props: ArrayProps): React.JSX.Element {
                             alert("Please enter a single word");
                             return;
                         }
-                        // let temp: string[] = [];
-                        // temp = [...(datatypeData?.length as string[] || [])];
-                        // temp.push(e.target.value);
                         setDatatypeData({ ...datatypeData, length: e.target.value });
-                        // setDatatypeData({ ...datatypeData, length: [...(datatypeData?.length || []), e.target.value] });
                     }
                 } />
-                <p> OR </p>
+                {/* <p> OR </p>
                 <Input type="number" id="stringLength" placeholder="Static value" onChange={
                     (e) => {
                         let temp = e.target.value + "";
                         console.log(temp , "temp");
                         setDatatypeData({ ...datatypeData, length: temp });
                     }
-                } />
+                } /> */}
             </div>
             <div className='flex gap-4'>
 

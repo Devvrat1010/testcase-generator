@@ -1,5 +1,6 @@
 package testcasegenerator.datatypes;
 
+import java.util.HashMap;
 import java.util.Random;
 import org.json.JSONObject;
 
@@ -17,11 +18,13 @@ public class HandleIntegerData {
         jsonObject.getJSONArray("specificValues").toList().stream().mapToInt(i -> (int) i).toArray() : null : null; 
     }
 
-    public Integer createTestcases() {
+    public Integer createTestcases(HashMap<String, Integer> map, String key) {
         Random random = new Random();
 
         if(this.range != null) {
-            return random.nextInt(this.range[1] - this.range[0] + 1) + this.range[0];
+            int res = random.nextInt(this.range[1] - this.range[0] + 1) + this.range[0];
+            map.put(key, res);
+            return res;
         } 
         // else {
             return this.specificValues[random.nextInt(this.specificValues.length)];

@@ -9,9 +9,8 @@ import { Label } from "@/components/ui/label"
 export default function Integer({ k, setDatatypeData, datatypeData, setErrorLine }: { k: number, setDatatypeData: React.Dispatch<React.SetStateAction<IntegerData | undefined>>, datatypeData:  IntegerData | undefined, setErrorLine: React.Dispatch<React.SetStateAction<string>> }): React.JSX.Element { 
     
     return (
-        <div className="flex flex-col justify-between gap-2 items-">
-            <div>
-
+        <div className="flex flex-col justify-between gap-2 p-2">
+            <div className='w-full'>
                 <Label>Range</Label>
                 <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">
                     <Input type="number" maxLength={1} id="integer" placeholder="start" onChange={

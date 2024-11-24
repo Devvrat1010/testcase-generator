@@ -1,5 +1,6 @@
 package testcasegenerator.datatypes;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -18,7 +19,7 @@ public class HandleFloatData {
         this.specificValues = jsonObject.has("specificValues") ? jsonObject.getJSONArray("specificValues").length() > 0 ?
                                 jsonObject.getJSONArray("specificValues").toList().stream().mapToDouble(i -> (double) i).toArray() : null : null; 
     }
-        public Double createTestcases() {
+        public Double createTestcases(HashMap<String, Integer> map, String key) {
             Random random = new Random();
             
             if (this.range != null) {
