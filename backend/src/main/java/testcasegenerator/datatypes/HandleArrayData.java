@@ -22,7 +22,7 @@ public class HandleArrayData {
 
         try {
             this.length = Integer.parseInt(this.strLength);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             System.out.println("Invalid length value for key: " + key);
             length = map.get(this.strLength);
         }

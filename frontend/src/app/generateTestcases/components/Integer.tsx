@@ -13,20 +13,21 @@ export default function Integer({ k, setDatatypeData, datatypeData, setErrorLine
             <div className='w-full'>
                 <Label>Range</Label>
                 <div className="flex gap-2 items-center [&>*]:w-1/2 [&>*]:p-1 [&>*]:h-fit">
-                    <Input type="number" maxLength={1} id="integer" placeholder="start" onChange={
+                    <Input type="string" maxLength={1} id="integer" placeholder="start" onChange={
                         (e) => {
-                            let temp = datatypeData?.range ? datatypeData.range[1] : 10000;
-                            setDatatypeData({ ...datatypeData, range: [Number(e.target.value), temp], specificValues: [] });
-                            // setCurr({ ...curr, varData: { ...curr.varData, range: [Number(e.target.value), curr.varData.range[1]] } });
+                            // fill the other value with current value or 10000
+                            let temp = datatypeData?.range ? datatypeData.range[1] : '10000';
+                            setDatatypeData({ ...datatypeData, range: [e.target.value, temp], specificValues: [] });
                         }
                     } />
                     -
-                    <Input type="number" id="intEnd" placeholder="end" onChange={
+                    <Input type="string" id="intEnd" placeholder="end" onChange={
                         (e) => {
-                            let temp = datatypeData?.range ? datatypeData.range[0] : 0;
-                            setDatatypeData({ ...datatypeData, range: [temp, Number(e.target.value)], specificValues: [] });
-                            // setEachLineData({...eachLineData, [k]: { ...eachLineData[k], [varName]: curr }});
-                            // setCurr({ ...curr, varData: { ...curr.varData, range: [curr.varData.range[0], Number(e.target.value)] } });
+                            // handle letters and special characters
+                            let temp = datatypeData?.range ? datatypeData.range[0] : '0';
+                            // fill the other value with current value or 0
+                            setDatatypeData({ ...datatypeData, range: [temp, e.target.value], specificValues: [] });
+
                         }
                     } />
                 </div>

@@ -1,10 +1,10 @@
 export interface IntegerData {
-    range?: number[];
+    range?: string[];
     specificValues?: number[];
 }
 
 export interface FloatData {
-    range?: number[];
+    range?: string[];
     specificValues?: number[];
 }
 

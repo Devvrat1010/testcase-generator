@@ -46,6 +46,10 @@ public class HandleStringData {
     }
 
     public String createTestcases(HashMap<String, Integer> map, String key) {
+        // System.out.println("String Data" + this);
+        // System.out.println("String Data : " + this.strLength);
+        // System.out.println("String Key : " + key);
+        // System.out.println("String Map" + map);
         try{
             this.length = Integer.parseInt(this.strLength);
         }

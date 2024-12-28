@@ -6,13 +6,15 @@ import org.json.JSONObject;
 
 public class HandleIntegerData {
     
-    private int[] range;
+    private String[] range = new String[2];
+    private int start;
+    private int end;
     private int[] specificValues;
 
     public HandleIntegerData(JSONObject jsonObject) {
         this.range = jsonObject.has("range") ? jsonObject.getJSONArray("range").length() == 2 ?
-                    new int[] { jsonObject.getJSONArray("range").getInt(0),
-                            jsonObject.getJSONArray("range").getInt(1) } : null :null;
+                    new String[] { jsonObject.getJSONArray("range").getString(0),
+                            jsonObject.getJSONArray("range").getString(1) } : null :null;
 
         this.specificValues = jsonObject.has("specificValues") ? jsonObject.getJSONArray("specificValues").length() > 0 ?
         jsonObject.getJSONArray("specificValues").toList().stream().mapToInt(i -> (int) i).toArray() : null : null; 
@@ -21,21 +23,35 @@ public class HandleIntegerData {
     public Integer createTestcases(HashMap<String, Integer> map, String key) {
         Random random = new Random();
 
+        try {
+            this.start = Integer.parseInt(this.range[0]);
+        } catch (NumberFormatException e) {
+            this.start = map.get(this.range[0]);
+        }
+        catch(Exception e){
+            System.out.println("Found what we were looklingh for : " + key);
+            return null;
+        }
+        try{
+            this.end = Integer.parseInt(this.range[1]);
+        }
+        catch(NumberFormatException e){
+            this.end = map.get(this.range[1]);
+        }
+        catch(Exception e){
+            System.out.println("Found what we were looklingh for : " + key);
+            return null;
+        }
+        
+
         if(this.range != null) {
-            int res = random.nextInt(this.range[1] - this.range[0] + 1) + this.range[0];
+            int res = random.nextInt(this.end - this.start + 1) + this.start;
             map.put(key, res);
             return res;
         } 
-        // else {
+        else {
             return this.specificValues[random.nextInt(this.specificValues.length)];
-        // }
-        // if (this.range != null) {
-        //     testcase.append(random.nextInt(this.range[1] - this.range[0] + 1) + this.range[0]);
-        // } else {
-        //     testcase.append(this.specificValues[random.nextInt(this.specificValues.length)]);
-        // }
-
-        // return testcase.toString();
+        }
     }
 
 }
